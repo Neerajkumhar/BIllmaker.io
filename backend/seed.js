@@ -17,8 +17,8 @@ const seedDatabase = async () => {
 
     const adminUser = await User.create({
       name: 'Admin User',
-      email: 'admin@billmaker.io',
-      password: 'admin123'
+      email: 'admin@visuark.com',
+      password: 'Admin@123'
     });
 
     const clients = await Client.insertMany([
@@ -34,8 +34,8 @@ const seedDatabase = async () => {
     ]);
 
     console.log('Database seeded successfully!');
-    console.log(`Admin Email: admin@billmaker.io`);
-    console.log(`Admin Password: admin123`);
+    console.log(`Admin Email: admin@visuark.com`);
+    console.log(`Admin Password: Admin@123`);
     process.exit();
   } catch (error) {
     console.error(error);
