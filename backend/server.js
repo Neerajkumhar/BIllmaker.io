@@ -27,6 +27,10 @@ app.use('/api/invoices', invoiceRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
+app.get('/', (req, res) => {
+  res.send('BillMaker API is running fine... 🚀');
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
