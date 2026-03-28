@@ -77,6 +77,7 @@ const InvoiceDetail = () => {
               <div className="flex items-center mb-2">
                 <img src="/logo-v.png" alt="Company Logo" className="h-[50px] md:h-[75px] object-contain" />
               </div>
+              <p className="text-xs font-black text-gray-900 uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-md border border-gray-200">MSME No: UDYAM-RJ-22-0203538</p>
             </div>
             <div className="text-center md:text-right">
               <h2 className="text-3xl md:text-5xl font-black text-gray-900 opacity-10 md:opacity-20 mb-2 tracking-tighter">INVOICE</h2>
@@ -140,10 +141,9 @@ const InvoiceDetail = () => {
             </table>
           </div>
 
-          {/* Footer Grid */}
           <div className="mt-12 flex flex-col md:flex-row justify-between items-center md:items-start gap-12 md:gap-0">
             {/* Left: Payment Method/Status */}
-            <div className="w-full md:w-auto space-y-6 order-2 md:order-1 text-center md:text-left">
+            <div className="w-full md:w-auto space-y-6 text-center md:text-left">
               <div>
                 <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Payment Summary</h4>
                 {invoice.payments && invoice.payments.length > 0 ? (
@@ -175,6 +175,7 @@ const InvoiceDetail = () => {
                         <p>A/C Name: Visuark Digital</p>
                         <p>A/C No.: 0123 4567 8901</p>
                         <p>Bank: Rimberio Global</p>
+                        <p className="text-xs text-indigo-700 font-black uppercase tracking-widest pt-2 border-t border-indigo-100 mt-2">MSME: UDYAM-RJ-22-0203538</p>
                         <p className="pt-2 text-[10px] text-indigo-500 uppercase">Payable by: {formatDate(invoice.dueDate)}</p>
                     </div>
                   </div>
@@ -187,7 +188,7 @@ const InvoiceDetail = () => {
             </div>
 
             {/* Right: Summary & Signature */}
-            <div className="w-full md:w-80 space-y-8 order-1 md:order-2">
+            <div className="w-full md:w-80 space-y-8">
               <div className="space-y-4 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Net Subtotal</span>
@@ -204,8 +205,10 @@ const InvoiceDetail = () => {
                 </div>
               </div>
 
-              <div className="pt-8 text-center border-t border-gray-200 no-print md:print:block">
-                <div className="h-12 w-48 bg-indigo-50/30 border border-dashed border-indigo-100 rounded-lg mx-auto mb-3"></div>
+              <div className="pt-8 text-center border-t border-gray-200">
+                <div className="h-[60px] flex items-center justify-center mb-1">
+                  <img src="/sign.png" alt="Signature" className="max-h-full max-w-[180px] object-contain mix-blend-multiply" />
+                </div>
                 <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Authorized Signatory</p>
               </div>
             </div>
@@ -213,19 +216,13 @@ const InvoiceDetail = () => {
         </div>
 
         {/* Bottom Decorative Footer */}
-        <div className="h-14 w-full flex overflow-hidden no-print mt-auto rounded-b-2xl md:rounded-b-none">
+        <div className="h-14 w-full flex overflow-hidden mt-auto rounded-b-2xl md:rounded-b-none print:h-12">
             <div className="w-1/2 bg-[#3b82f6] flex items-center px-4 md:px-12 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest">
-                <Mail size={12} className="mr-2" /> support@visuark.com
+                <Mail size={12} className="mr-2" /> contact@visuark.com
             </div>
             <div className="w-1/2 bg-[#10b981] flex items-center justify-end px-4 md:px-12 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest text-right">
-                IIT Jodhpur iStart Center
+                VISUARK | Digital Marketing Agency
             </div>
-        </div>
-        
-        {/* Print Only Bottom Bar */}
-        <div className="hidden print:flex absolute bottom-0 left-0 right-0 h-12 w-full overflow-hidden items-center text-white text-[10px] font-black">
-             <div className="w-1/2 bg-[#3b82f6] h-full flex items-center px-12 uppercase tracking-widest">support@visuark.com</div>
-             <div className="w-1/2 bg-[#10b981] h-full flex items-center justify-end px-12 uppercase tracking-widest">IIT Jodhpur iStart Center</div>
         </div>
       </div>
       
@@ -236,28 +233,44 @@ const InvoiceDetail = () => {
             margin: 0; 
             size: A4;
           }
-          body { 
+          html, body { 
+            height: 100vh !important;
+            overflow: hidden !important;
             background: white !important; 
             margin: 0 !important;
             padding: 0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
           }
           .no-print { display: none !important; }
           
-          div.flex.h-screen { 
-            display: block !important;
-            height: auto !important;
-            background: white !important;
-          }
-          
+          /* Force container to exactly one page height */
           .bg-white.shadow-xl {
             box-shadow: none !important;
             border: none !important;
             width: 100% !important;
             height: 100vh !important;
+            overflow: hidden !important;
             position: relative !important;
             padding: 0 !important;
             display: flex !important;
+            flex-direction: column !important;
+            margin: 0 !important;
           }
+
+          /* Force Desktop Layout in Print */
+          .flex-col.md\\:flex-row { flex-direction: row !important; }
+          .md\\:flex-row { flex-direction: row !important; }
+          .md\\:items-start { align-items: flex-start !important; }
+          .md\\:text-left { text-align: left !important; }
+          .md\\:text-right { text-align: right !important; }
+          .md\\:mb-16 { margin-bottom: 4rem !important; }
+          .md\\:mb-8 { margin-bottom: 2rem !important; }
+          .md\\:p-12 { padding: 3rem !important; }
+          .md\\:w-80 { width: 20rem !important; }
+          .md\\:block { display: block !important; }
+          .md\\:mx-0 { margin-left: 0 !important; margin-right: 0 !important; }
+          
           /* Ensure table text colors are preserved in print */
           * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
         }
