@@ -49,9 +49,9 @@ const InvoiceDetail = () => {
       <div className="flex flex-wrap justify-between items-center gap-4 bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-gray-100 no-print">
         <button 
           onClick={() => navigate('/invoices')}
-          className="flex items-center text-sm font-bold text-gray-500 hover:text-indigo-600 transition group"
+          className="flex items-center text-sm font-bold text-gray-500 hover:text-teal-600 transition group"
         >
-          <div className="p-1.5 bg-gray-50 rounded-lg mr-2 group-hover:bg-indigo-50 transition-colors">
+          <div className="p-1.5 bg-gray-50 rounded-lg mr-2 group-hover:bg-teal-50 transition-colors">
             <ArrowLeft size={16} />
           </div>
           Back to List
@@ -59,7 +59,7 @@ const InvoiceDetail = () => {
         <div className="flex space-x-2">
           <button 
             onClick={handlePrint}
-            className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 shadow-md shadow-indigo-100 text-sm font-bold transition-all"
+            className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 shadow-md shadow-teal-100 text-sm font-bold transition-all"
           >
             <Printer size={16} className="mr-2" /> Print PDF
           </button>
@@ -112,7 +112,7 @@ const InvoiceDetail = () => {
 
           {/* Separator - Design Element */}
           <div className="h-px w-full bg-gray-100 mb-8 overflow-hidden">
-             <div className="h-full w-1/4 bg-indigo-500"></div>
+             <div className="h-full w-1/4 bg-teal-500"></div>
           </div>
 
           {/* Items Table - Scrollable on mobile */}
@@ -134,7 +134,7 @@ const InvoiceDetail = () => {
                     </td>
                     <td className="py-5 text-center text-sm font-bold text-gray-600">{item.quantity}</td>
                     <td className="py-5 text-right text-sm font-bold text-gray-600">{formatCurrency(item.price)}</td>
-                    <td className="py-5 text-right text-sm font-black text-indigo-600">{formatCurrency(item.price * item.quantity)}</td>
+                    <td className="py-5 text-right text-sm font-black text-teal-700">{formatCurrency(item.price * item.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -169,14 +169,14 @@ const InvoiceDetail = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="inline-block p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100/50 text-left">
-                    <p className="text-[10px] text-indigo-700 font-black uppercase tracking-widest mb-2">Banking Details</p>
+                  <div className="inline-block p-5 bg-teal-50/50 rounded-2xl border border-teal-100/50 text-left">
+                    <p className="text-[10px] text-teal-700 font-black uppercase tracking-widest mb-2">Banking Details</p>
                     <div className="space-y-1 text-xs font-bold text-gray-600">
                         <p>A/C Name: Visuark Digital</p>
                         <p>A/C No.: 0123 4567 8901</p>
                         <p>Bank: Rimberio Global</p>
-                        <p className="text-xs text-indigo-700 font-black uppercase tracking-widest pt-2 border-t border-indigo-100 mt-2">MSME: UDYAM-RJ-22-0203538</p>
-                        <p className="pt-2 text-[10px] text-indigo-500 uppercase">Payable by: {formatDate(invoice.dueDate)}</p>
+                        <p className="text-xs text-teal-700 font-black uppercase tracking-widest pt-2 border-t border-teal-100 mt-2">MSME: UDYAM-RJ-22-0203538</p>
+                        <p className="pt-2 text-[10px] text-teal-600 uppercase">Payable by: {formatDate(invoice.dueDate)}</p>
                     </div>
                   </div>
                 )}
@@ -201,7 +201,7 @@ const InvoiceDetail = () => {
                 <div className="h-px w-full bg-gray-200"></div>
                 <div className="flex justify-between items-center pt-2">
                   <span className="text-lg font-black text-gray-900 uppercase tracking-tighter">Grand Total</span>
-                  <span className="text-3xl font-black text-indigo-600 leading-none">{formatCurrency(invoice.totalAmount)}</span>
+                  <span className="text-3xl font-black text-teal-700 leading-none">{formatCurrency(invoice.totalAmount)}</span>
                 </div>
               </div>
 
@@ -217,10 +217,10 @@ const InvoiceDetail = () => {
 
         {/* Bottom Decorative Footer */}
         <div className="h-14 w-full flex overflow-hidden mt-auto rounded-b-2xl md:rounded-b-none print:h-12">
-            <div className="w-1/2 bg-[#3b82f6] flex items-center px-4 md:px-12 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest">
+            <div className="w-1/2 bg-[#1B7C6C] flex items-center px-4 md:px-12 text-white text-[10px] font-black uppercase tracking-widest">
                 <Mail size={12} className="mr-2" /> contact@visuark.com
             </div>
-            <div className="w-1/2 bg-[#10b981] flex items-center justify-end px-4 md:px-12 text-white text-[9px] md:text-[10px] font-black uppercase tracking-widest text-right">
+            <div className="w-1/2 bg-[#0D5D56] flex items-center justify-end px-4 md:px-12 text-white text-[10px] font-black uppercase tracking-widest text-right">
                 VISUARK | Digital Marketing Agency
             </div>
         </div>
