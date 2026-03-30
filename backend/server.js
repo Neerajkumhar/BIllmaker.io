@@ -16,10 +16,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({
-  origin: ['https://b-illmaker-io.vercel.app', 'http://localhost:5173'],
-  credentials: true
-}));
+app.use(cors()); // Temporarily allow all for local dev troubleshooting
 app.use(express.json());
 
 // Routes
