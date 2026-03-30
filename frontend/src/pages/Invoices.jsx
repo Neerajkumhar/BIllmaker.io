@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Plus, Trash2, Eye } from 'lucide-react';
+import { Plus, Trash2, Eye, Pencil } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Invoices = () => {
@@ -109,6 +109,9 @@ const Invoices = () => {
                   <td className="py-4 px-4 md:px-6 text-right space-x-1 md:space-x-4">
                     <button onClick={() => viewPdf(inv._id)} className="p-1 px-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-all" title="View Detail">
                       <Eye size={16} />
+                    </button>
+                    <button onClick={() => navigate(`/invoices/${inv._id}/edit`)} className="p-1 px-2 text-gray-400 hover:text-teal-600 hover:bg-teal-50 rounded transition-all" title="Edit Invoice">
+                      <Pencil size={16} />
                     </button>
                     <button onClick={() => deleteInvoice(inv._id)} className="p-1 px-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-all" title="Delete">
                       <Trash2 size={16} />

@@ -14,6 +14,7 @@ import Services from './pages/Services';
 import Invoices from './pages/Invoices';
 import InvoiceCreate from './pages/InvoiceCreate';
 import InvoiceDetail from './pages/InvoiceDetail';
+import InvoiceEdit from './pages/InvoiceEdit'; 
 import Payments from './pages/Payments';
 
 import Analytics from './pages/Analytics';
@@ -66,6 +67,7 @@ function App() {
           <Route path="/invoices" element={<ProtectedRoute><Invoices /></ProtectedRoute>} />
           <Route path="/invoices/new" element={<ProtectedRoute><InvoiceCreate /></ProtectedRoute>} />
           <Route path="/invoices/:id" element={<ProtectedRoute><InvoiceDetail /></ProtectedRoute>} />
+          <Route path="/invoices/:id/edit" element={<ProtectedRoute><InvoiceEdit /></ProtectedRoute>} />
           <Route path="/payments" element={<ProtectedRoute><Payments /></ProtectedRoute>} />
           <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
           

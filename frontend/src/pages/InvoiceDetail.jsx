@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { Printer, ArrowLeft, Mail } from 'lucide-react';
+import { Printer, ArrowLeft, Mail, Phone, MapPin, Pencil } from 'lucide-react';
 
 const InvoiceDetail = () => {
   const { id } = useParams();
@@ -32,19 +32,19 @@ const InvoiceDetail = () => {
   if (!invoice) return <div className="p-8 text-center text-red-500 font-bold">Invoice not found!</div>;
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-GB');
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replace(/\//g, ' / ');
   };
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 2
-    }).format(amount);
+    return `₹${Math.floor(amount)}`;
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-4 md:space-y-6 pb-12 px-2 md:px-0">
+    <div className="max-w-4xl mx-auto space-y-4 md:space-y-6 pb-12 px-2 md:px-0">
       {/* Action Bar - Hidden on Print */}
       <div className="flex flex-wrap justify-between items-center gap-4 bg-white p-3 md:p-4 rounded-2xl shadow-sm border border-gray-100 no-print">
         <button 
@@ -58,184 +58,148 @@ const InvoiceDetail = () => {
         </button>
         <div className="flex space-x-2">
           <button 
+            onClick={() => navigate(`/invoices/${id}/edit`)}
+            className="flex items-center px-4 py-2.5 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 text-sm font-bold transition-all"
+          >
+            <Pencil size={16} className="mr-2" /> Edit Invoice
+          </button>
+          <button 
             onClick={handlePrint}
-            className="flex items-center px-4 py-2 bg-teal-600 text-white rounded-xl hover:bg-teal-700 shadow-md shadow-teal-100 text-sm font-bold transition-all"
+            className="flex items-center px-6 py-2.5 bg-black text-white rounded-xl hover:bg-gray-800 shadow-md text-sm font-bold transition-all"
           >
             <Printer size={16} className="mr-2" /> Print PDF
           </button>
         </div>
       </div>
 
-      {/* Invoice Paper Simulation */}
-      <div className="bg-white shadow-xl md:shadow-2xl rounded-2xl md:rounded-sm overflow-hidden print:shadow-none print:rounded-none mx-auto w-full min-h-0 md:min-h-[1100px] flex flex-col relative border border-gray-100">
+      {/* Invoice Paper */}
+      <div className="bg-white shadow-xl md:shadow-2xl rounded-sm overflow-hidden print:shadow-none print:rounded-none mx-auto w-full min-h-[1050px] flex flex-col relative border border-gray-100 font-sans text-black">
         
         {/* Paper Content */}
-        <div className="p-6 md:p-12 flex-1 flex flex-col">
+        <div className="p-8 md:p-16 flex-1 flex flex-col">
           {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-6 md:gap-0 mb-8 md:mb-16">
-            <div className="flex flex-col items-center md:items-start">
-              <div className="flex items-center mb-2">
-                <img src="/logo-v.png" alt="Company Logo" className="h-[50px] md:h-[75px] object-contain" />
-              </div>
-              <p className="text-xs font-black text-gray-900 uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-md border border-gray-200">MSME No: UDYAM-RJ-22-0203538</p>
+          <div className="flex justify-between items-center mb-12">
+            <div className="flex flex-col">
+              <img src="/logo-v.png" alt="VISUARK" className="h-[80px] object-contain mb-1" />
             </div>
-            <div className="text-center md:text-right">
-              <h2 className="text-3xl md:text-5xl font-black text-gray-900 opacity-10 md:opacity-20 mb-2 tracking-tighter">INVOICE</h2>
-              <div className={`inline-block px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                invoice.status === 'Paid' ? 'bg-green-100 text-green-700' : 
-                invoice.status === 'Overdue' ? 'bg-red-100 text-red-700' : 
-                'bg-amber-100 text-amber-700'
-              }`}>
-                {invoice.status}
-              </div>
+            <div>
+              <h2 className="text-5xl md:text-6xl font-normal text-black tracking-tight">INVOICE</h2>
             </div>
           </div>
 
           {/* Meta Info Grid */}
-          <div className="flex flex-col md:flex-row justify-between gap-8 mb-8 md:mb-16">
-            <div className="space-y-1.5 text-center md:text-left">
-              <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Billed To</p>
-              <h3 className="text-lg md:text-xl font-black text-gray-900 leading-tight">{invoice.client?.companyName || invoice.client?.name}</h3>
-              <p className="text-xs md:text-sm text-gray-500 max-w-[300px] mx-auto md:mx-0 font-medium">{invoice.client?.address}</p>
+          <div className="flex justify-between mb-20">
+            <div className="space-y-1">
+              <p className="text-base font-bold mb-3">Invoice to:</p>
+              <h3 className="text-xl font-bold leading-tight">{invoice.client?.companyName || invoice.client?.name}</h3>
+              <p className="text-base text-gray-600 font-semibold">{invoice.client?.address}</p>
             </div>
-            <div className="flex flex-col items-center md:items-end">
-              <div className="grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-2">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Invoice Ref</span>
-                <span className="text-sm font-bold text-gray-900">#{invoice.invoiceId}</span>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Issue Date</span>
-                <span className="text-sm font-bold text-gray-900">{formatDate(invoice.issueDate)}</span>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Due Date</span>
-                <span className="text-sm font-bold text-gray-900 text-red-600">{formatDate(invoice.dueDate)}</span>
+            <div className="text-right">
+              <div className="space-y-3">
+                <p className="text-xl font-bold"><span className="mr-2">Invoice :</span> {invoice.invoiceId}</p>
+                <p className="text-xl font-bold"><span className="mr-2">Date :</span> {formatDate(invoice.issueDate)}</p>
               </div>
             </div>
           </div>
 
-          {/* Separator - Design Element */}
-          <div className="h-px w-full bg-gray-100 mb-8 overflow-hidden">
-             <div className="h-full w-1/4 bg-teal-500"></div>
-          </div>
-
-          {/* Items Table - Scrollable on mobile */}
-          <div className="flex-1 overflow-x-auto -mx-6 md:mx-0 px-6 md:px-0 scrollbar-hide">
-            <table className="w-full text-left min-w-[600px] md:min-w-0">
+          {/* Items Table */}
+          <div className="flex-1">
+            <table className="w-full text-left">
               <thead>
-                <tr className="border-b-2 border-gray-900">
-                  <th className="pb-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Service Description</th>
-                  <th className="pb-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Qty</th>
-                  <th className="pb-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Unit Price</th>
-                  <th className="pb-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right">Total</th>
+                <tr className="border-t-[2px] border-b-[2px] border-black">
+                  <th className="py-4 text-sm font-bold">Item</th>
+                  <th className="py-4 text-sm font-bold text-center">Quantity</th>
+                  <th className="py-4 text-sm font-bold text-right pr-6">Unit Price</th>
+                  <th className="py-4 text-sm font-bold text-right">Total</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody>
                 {invoice.services.map((item, index) => (
-                  <tr key={index}>
-                    <td className="py-5">
-                      <p className="text-sm font-black text-gray-900">{item.customName || item.service?.name}</p>
+                  <tr key={index} className="border-b border-gray-200">
+                    <td className="py-6 pr-4">
+                      <p className="text-sm font-medium">{item.customName || item.service?.name}</p>
                     </td>
-                    <td className="py-5 text-center text-sm font-bold text-gray-600">{item.quantity}</td>
-                    <td className="py-5 text-right text-sm font-bold text-gray-600">{formatCurrency(item.price)}</td>
-                    <td className="py-5 text-right text-sm font-black text-teal-700">{formatCurrency(item.price * item.quantity)}</td>
+                    <td className="py-6 text-center text-sm font-medium">{item.quantity}</td>
+                    <td className="py-6 text-right pr-6 text-sm font-medium">{formatCurrency(item.price)}</td>
+                    <td className="py-6 text-right text-sm font-bold">{formatCurrency(item.price * item.quantity)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
 
-          <div className="mt-12 flex flex-col md:flex-row justify-between items-center md:items-start gap-12 md:gap-0">
-            {/* Left: Payment Method/Status */}
-            <div className="w-full md:w-auto space-y-6 text-center md:text-left">
-              <div>
-                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-widest mb-4">Payment Summary</h4>
-                {invoice.payments && invoice.payments.length > 0 ? (
-                  <div className="space-y-4">
-                    {invoice.payments.map((p, idx) => (
-                      <div key={idx} className="p-4 bg-green-50/50 rounded-2xl border border-green-100/50 inline-block md:block mb-2 text-left">
-                        <p className="text-[10px] text-green-700 font-black uppercase tracking-widest mb-1.5 flex items-center">
-                           <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
-                           Paid via {p.method}
-                        </p>
-                        <div className="flex justify-between gap-8">
-                           <span className="text-xs font-bold text-gray-600">Amount: {formatCurrency(p.amount)}</span>
-                           <span className="text-xs font-bold text-gray-400">{formatDate(p.date)}</span>
-                        </div>
-                      </div>
-                    ))}
-                    {invoice.totalAmount > invoice.paidAmount && (
-                      <div className="mt-4 p-4 bg-red-50 rounded-2xl border border-red-100 text-left">
-                        <p className="text-[10px] font-black text-red-600 uppercase tracking-widest mb-1">Balance Remaining</p>
-                        <p className="text-xl font-black text-red-600">{formatCurrency(invoice.totalAmount - invoice.paidAmount)}</p>
-                        <p className="text-[9px] text-red-400 mt-1 font-bold italic uppercase tracking-tighter leading-none">Kindly clear the pending dues</p>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="inline-block p-5 bg-teal-50/50 rounded-2xl border border-teal-100/50 text-left">
-                    <p className="text-[10px] text-teal-700 font-black uppercase tracking-widest mb-2">Banking Details</p>
-                    <div className="space-y-1 text-xs font-bold text-gray-600">
-                        <p>A/C Name: Visuark Digital</p>
-                        <p>A/C No.: 0123 4567 8901</p>
-                        <p>Bank: Rimberio Global</p>
-                        <p className="text-xs text-teal-700 font-black uppercase tracking-widest pt-2 border-t border-teal-100 mt-2">MSME: UDYAM-RJ-22-0203538</p>
-                        <p className="pt-2 text-[10px] text-teal-600 uppercase">Payable by: {formatDate(invoice.dueDate)}</p>
-                    </div>
+            {/* Totals Section */}
+            <div className="flex justify-end mt-4">
+              <div className="w-64 space-y-4">
+                <div className="flex justify-between pr-4">
+                   <span className="text-sm font-bold">Subtotal</span>
+                   <span className="text-sm font-bold">{formatCurrency(invoice.subtotal)}</span>
+                </div>
+                {invoice.gstAmount > 0 && (
+                  <div className="flex justify-between pr-4">
+                    <span className="text-sm font-bold">Tax ({invoice.gstPercentage}%)</span>
+                    <span className="text-sm font-bold">{formatCurrency(invoice.gstAmount)}</span>
                   </div>
                 )}
+                <div className="pt-4 border-t-[2px] border-black mr-0">
+                  <div className="flex justify-between items-center">
+                    <span className="text-2xl font-bold uppercase">Total</span>
+                    <span className="text-3xl font-extrabold">{formatCurrency(invoice.totalAmount)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Method & Sign Off */}
+          <div className="mt-12 flex justify-between items-end">
+            <div className="space-y-8">
+              <div>
+                <h4 className="text-sm font-bold uppercase tracking-tight mb-2">PAYMENT METHOD</h4>
+                <p className="text-sm font-bold">UPI : 8619949455@naviaxis</p>
               </div>
               
-              <div className="pt-4">
-                <p className="text-sm text-gray-400 italic max-w-xs mx-auto md:mx-0">Thank you for choosing Visuark Digital Services!</p>
+              <div className="pt-20">
+                <h3 className="text-2xl font-semibold text-gray-800 leading-tight max-w-[320px]">
+                  Thank you for be a part of VISUARK!
+                </h3>
               </div>
             </div>
 
-            {/* Right: Summary & Signature */}
-            <div className="w-full md:w-80 space-y-8">
-              <div className="space-y-4 bg-gray-50/50 p-6 rounded-3xl border border-gray-100">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Net Subtotal</span>
-                  <span className="text-gray-900 font-black">{formatCurrency(invoice.subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-400 font-black uppercase tracking-widest text-[10px]">Taxes ({invoice.gstPercentage}%)</span>
-                  <span className="text-gray-900 font-black">{formatCurrency(invoice.gstAmount)}</span>
-                </div>
-                <div className="h-px w-full bg-gray-200"></div>
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-lg font-black text-gray-900 uppercase tracking-tighter">Grand Total</span>
-                  <span className="text-3xl font-black text-teal-700 leading-none">{formatCurrency(invoice.totalAmount)}</span>
-                </div>
+            <div className="text-center w-64">
+              <div className="h-[80px] flex items-center justify-center mb-0">
+                <img src="/sign.png" alt="Signature" className="max-h-full object-contain" />
               </div>
-
-              <div className="pt-8 text-center border-t border-gray-200">
-                <div className="h-[60px] flex items-center justify-center mb-1">
-                  <img src="/sign.png" alt="Signature" className="max-h-full max-w-[180px] object-contain mix-blend-multiply" />
-                </div>
-                <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest">Authorized Signatory</p>
-              </div>
+              <div className="border-t border-black mb-1"></div>
+              <p className="text-xs font-bold text-gray-600 uppercase tracking-wider">Authorized Signed</p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Decorative Footer */}
-        <div className="h-14 w-full flex overflow-hidden mt-auto rounded-b-2xl md:rounded-b-none print:h-12">
-            <div className="w-1/2 bg-[#1B7C6C] flex items-center px-4 md:px-12 text-white text-[10px] font-black uppercase tracking-widest">
-                <Mail size={12} className="mr-2" /> contact@visuark.com
+        {/* Bottom Gradient Footer Area */}
+        <div className="h-16 w-full flex items-center justify-between px-12 text-white relative mt-auto bg-gradient" style={{
+           background: 'linear-gradient(90deg, rgba(20,20,20,1) 0%, rgba(20,20,20,1) 40%, rgba(138,103,17,1) 100%)'
+        }}>
+            <div className="flex items-center space-x-2 text-[11px] font-medium tracking-wide">
+                <Phone size={14} className="text-[#c19a27]" />
+                <span>+91 8619949455</span>
             </div>
-            <div className="w-1/2 bg-[#0D5D56] flex items-center justify-end px-4 md:px-12 text-white text-[10px] font-black uppercase tracking-widest text-right">
-                VISUARK | Digital Marketing Agency
+            <div className="flex items-center space-x-2 text-[11px] font-medium tracking-wide">
+                <MapPin size={14} className="text-[#c19a27]" />
+                <span>I Start Incubation Center, Jodhpur</span>
             </div>
         </div>
       </div>
       
-      {/* Page-Specific Print Styles */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         @media print {
           @page { 
             margin: 0; 
             size: A4;
           }
           html, body { 
-            height: 100vh !important;
-            overflow: hidden !important;
+            height: 100% !important;
             background: white !important; 
             margin: 0 !important;
             padding: 0 !important;
@@ -243,39 +207,15 @@ const InvoiceDetail = () => {
             print-color-adjust: exact !important;
           }
           .no-print { display: none !important; }
-          
-          /* Force container to exactly one page height */
-          .bg-white.shadow-xl {
-            box-shadow: none !important;
-            border: none !important;
-            width: 100% !important;
-            height: 100vh !important;
-            overflow: hidden !important;
-            position: relative !important;
-            padding: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            margin: 0 !important;
+          .bg-gradient {
+             background: linear-gradient(90deg, #141414 0%, #141414 40%, #8a6711 100%) !important;
+             -webkit-print-color-adjust: exact !important;
           }
-
-          /* Force Desktop Layout in Print */
-          .flex-col.md\\:flex-row { flex-direction: row !important; }
-          .md\\:flex-row { flex-direction: row !important; }
-          .md\\:items-start { align-items: flex-start !important; }
-          .md\\:text-left { text-align: left !important; }
-          .md\\:text-right { text-align: right !important; }
-          .md\\:mb-16 { margin-bottom: 4rem !important; }
-          .md\\:mb-8 { margin-bottom: 2rem !important; }
-          .md\\:p-12 { padding: 3rem !important; }
-          .md\\:w-80 { width: 20rem !important; }
-          .md\\:block { display: block !important; }
-          .md\\:mx-0 { margin-left: 0 !important; margin-right: 0 !important; }
-          
-          /* Ensure table text colors are preserved in print */
-          * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
         }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        * {
+           font-family: 'Plus Jakarta Sans', sans-serif;
+        }
       `}</style>
     </div>
   );

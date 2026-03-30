@@ -196,4 +196,44 @@ const downloadInvoicePdf = async (req, res) => {
   }
 };
 
-module.exports = { getInvoices, getInvoiceById, createInvoice, updateInvoiceStatus, deleteInvoice, downloadInvoicePdf };
+// @desc    Update an invoice
+// @route   PUT /api/invoices/:id
+// @access  Private
+const updateInvoice = async (req, res) => {
+  try {
+    const { client, services, gstIncluded, issueDate, dueDate, status } = req.body;
+    const invoice = await Invoice.findById(req.params.id);
+
+    if (invoice) {
+      if (services) {
+        let subtotal = 0;
+        services.forEach(item => {
+          subtotal += item.price * (item.quantity || 1);
+        });
+
+        invoice.subtotal = subtotal;
+        invoice.services = services;
+        
+        let gstPercentage = (gstIncluded !== undefined ? gstIncluded : invoice.gstIncluded) ? 18 : 0;
+        invoice.gstPercentage = gstPercentage;
+        invoice.gstAmount = (subtotal * gstPercentage) / 100;
+        invoice.totalAmount = subtotal + invoice.gstAmount;
+      }
+
+      invoice.client = client || invoice.client;
+      invoice.gstIncluded = gstIncluded !== undefined ? gstIncluded : invoice.gstIncluded;
+      invoice.issueDate = issueDate || invoice.issueDate;
+      invoice.dueDate = dueDate || invoice.dueDate;
+      invoice.status = status || invoice.status;
+
+      const updatedInvoice = await invoice.save();
+      res.json(updatedInvoice);
+    } else {
+      res.status(404).json({ message: 'Invoice not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+module.exports = { getInvoices, getInvoiceById, createInvoice, updateInvoice, updateInvoiceStatus, deleteInvoice, downloadInvoicePdf };
