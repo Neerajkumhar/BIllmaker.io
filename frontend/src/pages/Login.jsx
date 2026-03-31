@@ -34,7 +34,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-[#05110c] flex items-center justify-center p-4 md:p-10 font-sans relative overflow-hidden">
-      
+
       {/* Ambient background glows */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-900/10 rounded-full blur-[120px] animate-blob"></div>
@@ -42,16 +42,16 @@ const Login = () => {
       </div>
 
       <div className="z-10 w-full max-w-6xl flex flex-col md:flex-row items-center justify-center gap-12 lg:gap-24 animate-fade-in">
-        
+
         {/* Left Side: Visual Asset */}
         <div className="w-full md:w-1/2 flex items-center justify-center">
           <div className="relative group max-w-md lg:max-w-xl">
             <div className="absolute -inset-2 bg-gradient-to-tr from-emerald-500/10 to-transparent rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
             <div className="relative rounded-[2.5rem] overflow-hidden shadow-[0_48px_96px_-24px_rgba(0,0,0,0.6)] border border-white/5 ring-1 ring-white/10 bg-[#05110c]">
-              <img 
-                src="/visuark-team.png" 
-                alt="Visuark Team" 
-                className="w-full h-auto object-cover transform transition-transform duration-1000 hover:scale-105" 
+              <img
+                src="/visuark-team.png"
+                alt="Visuark Team"
+                className="w-full h-auto object-cover transform transition-transform duration-1000 hover:scale-105"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ const Login = () => {
                     type="email"
                     required
                     className="w-full pl-12 pr-4 py-4 bg-white/[0.04] border border-white/[0.05] focus:border-emerald-500/30 text-white placeholder-white/10 rounded-2xl focus:outline-none transition-all duration-300 ring-0 focus:ring-4 focus:ring-emerald-500/5"
-                    placeholder="sunil@visuark.com"
+                    placeholder="user@visuark.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
@@ -130,14 +130,15 @@ const Login = () => {
               </button>
             </form>
           </div>
-          
+
           <div className="mt-8 text-center md:text-left">
             <p className="text-[10px] text-white/10 font-bold uppercase tracking-widest">&copy; 2026 Admin Portal Security • Established 2024</p>
           </div>
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes blob {
           0%, 100% { transform: translate(0, 0) scale(1); }
           33% { transform: translate(30px, -50px) scale(1.1); }
