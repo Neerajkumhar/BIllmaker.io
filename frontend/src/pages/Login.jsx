@@ -11,11 +11,19 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
     try {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError('Invalid email or password');
+      if (err.response && err.response.status === 401) {
+        setError('Invalid email or password');
+      } else if (err.message === 'Network Error' || (err.code && err.code === 'ERR_NETWORK')) {
+        setError('Cannot connect to server. Ensure backend is running and CORS is configured.');
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+        console.error('Login error:', err);
+      }
     }
   };
 

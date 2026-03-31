@@ -15,12 +15,14 @@ const resetPassword = async () => {
       const newUser = new User({
         name: 'Admin User',
         email: email.toLowerCase(),
-        password: 'admin123'
+        password: 'admin123',
+        role: 'admin'
       });
       await newUser.save();
       console.log('New Admin User created!');
     } else {
       user.password = 'admin123';
+      user.role = 'admin';
       await user.save();
       console.log('Admin password updated successfully!');
     }

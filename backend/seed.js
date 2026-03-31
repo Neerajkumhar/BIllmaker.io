@@ -18,7 +18,8 @@ const seedDatabase = async () => {
     const adminUser = await User.create({
       name: 'Admin User',
       email: 'admin@visuark.com',
-      password: 'Admin@123'
+      password: 'Admin@123',
+      role: 'admin'
     });
 
     const clients = await Client.insertMany([
